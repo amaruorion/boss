@@ -3,46 +3,24 @@ namespace SpriteKind {
     export const PlayerProjectiole = SpriteKind.create()
     export const PlayerProjectile = SpriteKind.create()
     export const ExplodingProjectile = SpriteKind.create()
+    export const HiddenSprite = SpriteKind.create()
+    export const lifebar = SpriteKind.create()
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    move(ThePlayer)
+    game.over(true, effects.confetti)
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
-        . . . 5 5 . . . 
+        . . . . . . . . 
+        . . . 4 4 . . . 
         . . 5 4 4 5 . . 
-        . 5 4 5 5 4 5 . 
-        5 4 5 4 4 5 4 5 
-        5 4 5 4 4 5 4 5 
-        . 5 4 5 5 4 5 . 
+        . 4 4 2 2 4 4 . 
+        . 4 4 2 2 4 4 . 
         . . 5 4 4 5 . . 
-        . . . 5 5 . . . 
+        . . . 4 4 . . . 
+        . . . . . . . . 
         `, ThePlayer, 0, -100)
     projectile.setKind(SpriteKind.PlayerProjectile)
-    animation.runImageAnimation(
-    projectile,
-    [img`
-        . . . 5 5 . . . 
-        . . 5 4 4 5 . . 
-        . 5 4 5 5 4 5 . 
-        5 4 5 4 4 5 4 5 
-        5 4 5 4 4 5 4 5 
-        . 5 4 5 5 4 5 . 
-        . . 5 4 4 5 . . 
-        . . . 5 5 . . . 
-        `,img`
-        . . . 4 4 . . . 
-        . . 4 5 5 4 . . 
-        . 4 5 4 4 5 4 . 
-        4 5 4 5 5 4 5 4 
-        4 5 4 5 5 4 5 4 
-        . 4 5 4 4 5 4 . 
-        . . 4 5 5 4 . . 
-        . . . 4 4 . . . 
-        `],
-    100,
-    true
-    )
 })
 info.onCountdownEnd(function () {
     game.splash("" + (75 - timesHit) + " " + "Enemy Health Left")
@@ -94,213 +72,26 @@ sprites.onOverlap(SpriteKind.PlayerProjectile, SpriteKind.Projectile, function (
     sprite.destroy(effects.spray, 500)
     otherSprite.destroy(effects.spray, 500)
 })
-function enemyShoot (projectileImage: Image) {
-    ProjectileEnemy = sprites.createProjectileFromSprite(projectileImage, Skelly, 50, 0)
-    animation.runImageAnimation(
-    ProjectileEnemy,
-    [img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `,img`
-        . . . 8 8 . . . 
-        . . 8 9 9 8 . . 
-        . 8 9 8 8 9 8 . 
-        8 9 8 9 9 8 9 8 
-        8 9 8 9 9 8 9 8 
-        . 8 9 8 8 9 8 . 
-        . . 8 9 9 8 . . 
-        . . . 8 8 . . . 
-        `],
-    100,
-    true
-    )
-    ProjectileEnemy = sprites.createProjectileFromSprite(projectileImage, Skelly, 50, 50)
-    animation.runImageAnimation(
-    ProjectileEnemy,
-    [img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `,img`
-        . . . 8 8 . . . 
-        . . 8 9 9 8 . . 
-        . 8 9 8 8 9 8 . 
-        8 9 8 9 9 8 9 8 
-        8 9 8 9 9 8 9 8 
-        . 8 9 8 8 9 8 . 
-        . . 8 9 9 8 . . 
-        . . . 8 8 . . . 
-        `],
-    100,
-    true
-    )
-    ProjectileEnemy = sprites.createProjectileFromSprite(projectileImage, Skelly, 0, 50)
-    animation.runImageAnimation(
-    ProjectileEnemy,
-    [img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `,img`
-        . . . 8 8 . . . 
-        . . 8 9 9 8 . . 
-        . 8 9 8 8 9 8 . 
-        8 9 8 9 9 8 9 8 
-        8 9 8 9 9 8 9 8 
-        . 8 9 8 8 9 8 . 
-        . . 8 9 9 8 . . 
-        . . . 8 8 . . . 
-        `],
-    100,
-    true
-    )
-    ProjectileEnemy = sprites.createProjectileFromSprite(projectileImage, Skelly, -50, 50)
-    animation.runImageAnimation(
-    ProjectileEnemy,
-    [img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `,img`
-        . . . 8 8 . . . 
-        . . 8 9 9 8 . . 
-        . 8 9 8 8 9 8 . 
-        8 9 8 9 9 8 9 8 
-        8 9 8 9 9 8 9 8 
-        . 8 9 8 8 9 8 . 
-        . . 8 9 9 8 . . 
-        . . . 8 8 . . . 
-        `],
-    100,
-    true
-    )
-    ProjectileEnemy = sprites.createProjectileFromSprite(projectileImage, Skelly, -50, 0)
-    animation.runImageAnimation(
-    ProjectileEnemy,
-    [img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `,img`
-        . . . 8 8 . . . 
-        . . 8 9 9 8 . . 
-        . 8 9 8 8 9 8 . 
-        8 9 8 9 9 8 9 8 
-        8 9 8 9 9 8 9 8 
-        . 8 9 8 8 9 8 . 
-        . . 8 9 9 8 . . 
-        . . . 8 8 . . . 
-        `],
-    100,
-    true
-    )
-    ProjectileEnemy = sprites.createProjectileFromSprite(projectileImage, Skelly, -50, -50)
-    animation.runImageAnimation(
-    ProjectileEnemy,
-    [img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `,img`
-        . . . 8 8 . . . 
-        . . 8 9 9 8 . . 
-        . 8 9 8 8 9 8 . 
-        8 9 8 9 9 8 9 8 
-        8 9 8 9 9 8 9 8 
-        . 8 9 8 8 9 8 . 
-        . . 8 9 9 8 . . 
-        . . . 8 8 . . . 
-        `],
-    100,
-    true
-    )
-    ProjectileEnemy = sprites.createProjectileFromSprite(projectileImage, Skelly, 0, -50)
-    animation.runImageAnimation(
-    ProjectileEnemy,
-    [img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `,img`
-        . . . 8 8 . . . 
-        . . 8 9 9 8 . . 
-        . 8 9 8 8 9 8 . 
-        8 9 8 9 9 8 9 8 
-        8 9 8 9 9 8 9 8 
-        . 8 9 8 8 9 8 . 
-        . . 8 9 9 8 . . 
-        . . . 8 8 . . . 
-        `],
-    100,
-    true
-    )
-    ProjectileEnemy = sprites.createProjectileFromSprite(projectileImage, Skelly, 50, -50)
-    animation.runImageAnimation(
-    ProjectileEnemy,
-    [img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `,img`
-        . . . 8 8 . . . 
-        . . 8 9 9 8 . . 
-        . 8 9 8 8 9 8 . 
-        8 9 8 9 9 8 9 8 
-        8 9 8 9 9 8 9 8 
-        . 8 9 8 8 9 8 . 
-        . . 8 9 9 8 . . 
-        . . . 8 8 . . . 
-        `],
-    100,
-    true
-    )
+function enemyShoot (projectileImage: Image, Boss: Sprite) {
+    for (let index = 0; index <= MAX - 1; index++) {
+        _60_sine = 60 * Math.sin(360 / 10 * index / 57.3)
+        _60_cosine = 60 * Math.cos(360 / 10 * index / 57.3)
+        _100_cosine = 100 * Math.cos((360 / 10 * index + 0.5) / 57.3)
+        _100_sine = 100 * Math.sin((360 / 10 * index + 0.5) / 57.3)
+        projectileSprite = sprites.createProjectileFromSprite(projectileImage, Skelly, _60_sine, _60_cosine)
+        projectileSprite = sprites.createProjectileFromSprite(projectileImage, Skelly, _100_sine, _100_cosine)
+    }
 }
 function move (Boss: Sprite) {
-    Boss.setPosition(randint(20, 140), Boss.y)
+    Boss.setPosition(randint(20, 140), randint(10, 30))
 }
-let ProjectileEnemy: Sprite = null
+let projectileSprite: Sprite = null
+let _100_sine = 0
+let _100_cosine = 0
+let _60_cosine = 0
+let _60_sine = 0
 let projectile: Sprite = null
+let MAX = 0
 let timesHit = 0
 let statusbar: StatusBarSprite = null
 let ThePlayer: Sprite = null
@@ -363,6 +154,7 @@ let projectileImage = img`
     `
 statusbar = statusbars.create(75, 10, StatusBarKind.EnemyHealth)
 timesHit = 0
+MAX = 10
 statusbar.setLabel("Boss HP")
 statusbar.setBarBorder(3, 13)
 statusbar.setPosition(75, 5)
@@ -394,28 +186,19 @@ game.onUpdate(function () {
         . . . . . . . f f f . . . . . . 
         `)
 })
-game.onUpdateInterval(500, function () {
-    enemyShoot(img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `)
+game.onUpdateInterval(1000, function () {
+    move(Skelly)
 })
 game.onUpdateInterval(3000, function () {
     enemyShoot(img`
-        . . . 9 9 . . . 
-        . . 9 8 8 9 . . 
-        . 9 8 9 9 8 9 . 
-        9 8 9 8 8 9 8 9 
-        9 8 9 8 8 9 8 9 
-        . 9 8 9 9 8 9 . 
-        . . 9 8 8 9 . . 
-        . . . 9 9 . . . 
-        `)
+        . . . . . . . . 
+        . . . 6 6 . . . 
+        . . 9 6 6 9 . . 
+        . 6 6 8 8 6 6 . 
+        . 6 6 8 8 6 6 . 
+        . . 9 6 6 9 . . 
+        . . . 6 6 . . . 
+        . . . . . . . . 
+        `, Skelly)
     move(Skelly)
 })
