@@ -6,14 +6,14 @@ namespace SpriteKind {
     export const HiddenSprite = SpriteKind.create()
     export const lifebar = SpriteKind.create()
 }
-function _10shoot () {
+function _10shoot (Boss: Sprite, ProjectileImage: Image) {
     for (let index = 0; index <= MAX - 1; index++) {
         _60_sine = 60 * Math.sin(360 / 10 * index / 57.3)
         _60_cosine = 60 * Math.cos(360 / 10 * index / 57.3)
         _100_cosine = 100 * Math.cos((360 / 10 * index + 0.5) / 57.3)
         _100_sine = 100 * Math.sin((360 / 10 * index + 0.5) / 57.3)
-        projectileSprite = sprites.createProjectileFromSprite(projectileImage, Skelly, _60_sine, _60_cosine)
-        projectileSprite = sprites.createProjectileFromSprite(projectileImage, Skelly, _100_sine, _100_cosine)
+        projectileSprite = sprites.createProjectileFromSprite(ProjectileImage, Boss, _60_sine, _60_cosine)
+        projectileSprite = sprites.createProjectileFromSprite(ProjectileImage, Boss, _100_sine, _100_cosine)
     }
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -72,7 +72,6 @@ sprites.onOverlap(SpriteKind.PlayerProjectile, SpriteKind.Enemy, function (sprit
     sprite.destroy(effects.spray, 500)
     statusbar.value += -1
     timesHit += 1
-    move(Skelly)
 })
 info.onLifeZero(function () {
     game.splash("" + (75 - timesHit) + " " + "Enemy Health Left")
@@ -84,9 +83,9 @@ sprites.onOverlap(SpriteKind.PlayerProjectile, SpriteKind.Projectile, function (
 })
 function enemyShoot (projectileImage: Image, Boss: Sprite) {
     if (Math.percentChance(50)) {
-        _10shoot()
+        _10shoot(Boss, projectileImage)
         animation.runImageAnimation(
-        Skelly,
+        Boss,
         [img`
             . . . . . . . . . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -296,9 +295,9 @@ function enemyShoot (projectileImage: Image, Boss: Sprite) {
             info.changeLifeBy(-5)
             LiveLoseCounter += 1
         } else {
-            _10shoot()
+            _10shoot(Boss, projectileImage)
             animation.runImageAnimation(
-            Skelly,
+            Boss,
             [img`
                 . . . . . . . . . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -506,9 +505,6 @@ function enemyShoot (projectileImage: Image, Boss: Sprite) {
         }
     }
 }
-function move (Boss: Sprite) {
-    Boss.setPosition(randint(20, 140), randint(10, 30))
-}
 let projectile: Sprite = null
 let projectileSprite: Sprite = null
 let _100_sine = 0
@@ -521,7 +517,7 @@ let timesHit = 0
 let statusbar: StatusBarSprite = null
 let ThePlayer: Sprite = null
 let Skelly: Sprite = null
-tiles.setTilemap(tiles.createTilemap(hex`0a0008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000`, img`
+tiles.setTilemap(tiles.createTilemap(hex`0a0008000200000000000000000102000000000000000001020000000000000000010200000000000000000102000000000000000001020000000000000000010200000000000000000102000000000000000001`, img`
     . . . . . . . . . . 
     . . . . . . . . . . 
     . . . . . . . . . . 
@@ -530,7 +526,7 @@ tiles.setTilemap(tiles.createTilemap(hex`0a0008000000000000000000000000000000000
     . . . . . . . . . . 
     . . . . . . . . . . 
     . . . . . . . . . . 
-    `, [myTiles.transparency16], TileScale.Sixteen))
+    `, [myTiles.transparency16,myTiles.tile2,myTiles.tile16], TileScale.Sixteen))
 Skelly = sprites.create(img`
     . . . . . . f f f f . . . . . . 
     . . . . f f 1 1 1 1 f f . . . . 
@@ -581,9 +577,10 @@ statusbar = statusbars.create(75, 10, StatusBarKind.EnemyHealth)
 timesHit = 0
 MAX = 10
 LiveLoseCounter = 0
+let isMovingLeft = true
 statusbar.setLabel("Boss HP")
 statusbar.setBarBorder(3, 13)
-statusbar.setPosition(75, 5)
+statusbar.setPosition(75, 16)
 controller.moveSprite(ThePlayer, 100, 100)
 tiles.placeOnTile(Skelly, tiles.getTileLocation(0, 0))
 tiles.placeOnTile(ThePlayer, tiles.getTileLocation(5, 6))
@@ -592,9 +589,6 @@ Skelly.setFlag(SpriteFlag.StayInScreen, true)
 ThePlayer.setFlag(SpriteFlag.StayInScreen, true)
 info.setLife(20)
 info.startCountdown(60)
-game.onUpdateInterval(5000, function () {
-    move(Skelly)
-})
 game.onUpdateInterval(2000, function () {
     enemyShoot(img`
         . . . . . . . . 
@@ -606,4 +600,18 @@ game.onUpdateInterval(2000, function () {
         . . . 6 6 . . . 
         . . . . . . . . 
         `, Skelly)
+})
+forever(function () {
+    if (isMovingLeft) {
+        Skelly.setVelocity(-50, 0)
+    }
+    if (!(isMovingLeft)) {
+        Skelly.setVelocity(50, 0)
+    }
+    if (Skelly.tileKindAt(TileDirection.Right, myTiles.tile2)) {
+        isMovingLeft = true
+    }
+    if (Skelly.tileKindAt(TileDirection.Left, myTiles.tile2)) {
+        isMovingLeft = false
+    }
 })
