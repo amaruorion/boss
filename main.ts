@@ -8,10 +8,10 @@ namespace SpriteKind {
 }
 function _10shoot (Boss: Sprite, ProjectileImage: Image) {
     for (let index = 0; index <= MAX - 1; index++) {
-        _60_sine = 60 * Math.sin(360 / 10 * index / 57.3)
-        _60_cosine = 60 * Math.cos(360 / 10 * index / 57.3)
-        _100_cosine = 100 * Math.cos((360 / 10 * index + 0.5) / 57.3)
-        _100_sine = 100 * Math.sin((360 / 10 * index + 0.5) / 57.3)
+        _60_sine = 60 * Math.sin((360 / 10 * index + offset) / 57.3)
+        _60_cosine = 60 * Math.cos((360 / 10 * index + offset) / 57.3)
+        _100_cosine = 100 * Math.sin((360 / 10 * index + offset) / 57.3)
+        _100_sine = 100 * Math.cos((360 / 10 * index + offset) / 57.3)
         projectileSprite = sprites.createProjectileFromSprite(ProjectileImage, Boss, _60_sine, _60_cosine)
         projectileSprite = sprites.createProjectileFromSprite(ProjectileImage, Boss, _100_sine, _100_cosine)
     }
@@ -287,7 +287,7 @@ function enemyShoot (projectileImage: Image, Boss: Sprite) {
             . . . . . . . . . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . . . . . . . . . 
             `],
-        100,
+        75,
         false
         )
     } else if (Math.percentChance(50)) {
@@ -511,6 +511,7 @@ let _100_sine = 0
 let _100_cosine = 0
 let _60_cosine = 0
 let _60_sine = 0
+let offset = 0
 let LiveLoseCounter = 0
 let MAX = 0
 let timesHit = 0
@@ -578,6 +579,7 @@ timesHit = 0
 MAX = 10
 LiveLoseCounter = 0
 let isMovingLeft = true
+offset = 36
 statusbar.setLabel("Boss HP")
 statusbar.setBarBorder(3, 13)
 statusbar.setPosition(75, 16)
